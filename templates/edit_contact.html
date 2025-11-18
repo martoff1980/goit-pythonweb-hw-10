@@ -1,0 +1,27 @@
+<!-- @format -->
+
+{% extends "base.html" %} {% block content %}
+<h2>Редагування контакту</h2>
+<form action="/contacts/edit/{{ contact.id }}" method="post">
+	<label>Ім’я:</label>
+	<input type="text" name="first_name" value="{{ contact.first_name }}" required />
+
+	<label>Прізвище:</label>
+	<input type="text" name="last_name" value="{{ contact.last_name }}" required />
+
+	<label>Електронна адреса:</label>
+	<input type="email" name="email" value="{{ contact.email }}" required />
+
+	<label>Телефон:</label>
+	<input type="text" name="phone" value="{{ contact.phone }}" required />
+
+	<label>День народження:</label>
+	<input type="date" name="date_of_birth" value="{{ contact.date_of_birth.isoformat() }}" required />
+
+	<label>Додаткова інформація:</label>
+	<textarea name="information">{{ contact.information }}</textarea>
+
+	<button type="submit">💾 Зберегти</button>
+	<a href="/">⬅ Назад</a>
+</form>
+{% endblock %}

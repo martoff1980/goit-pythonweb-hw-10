@@ -1,0 +1,39 @@
+<!-- @format -->
+
+{% extends "base.html" %} {% block content %}
+<form method="get" action="/contacts" style="margin-top: 20px">
+	<input type="text" name="q" value="{{ query }}" placeholder="Пошук за ім'ям, прізвищем або email" style="width: 60%; padding: 8px" />
+	<button type="submit">🔍 Пошук</button>
+	{% if query %}
+	<a href="/" style="margin-left: 10px">Скинути</a>
+	{% endif %}
+</form>
+
+<a href="/contacts/add">➕ Додати контакт</a>
+<a href="/contacts/birthdays/upcoming">🎂 Найближчі дні народження</a>
+<table>
+	<tr>
+		<th>Ім’я</th>
+		<th>Прізвище</th>
+		<th>Електронна адреса</th>
+		<th>Телефон</th>
+		<th>День народження</th>
+		<th>Додаткова інформація</th>
+		<th>Редагувати/Видалити контакт</th>
+	</tr>
+	{% for c in contacts %}
+	<tr>
+		<td>{{ c.first_name }}</td>
+		<td>{{ c.last_name }}</td>
+		<td>{{ c.email }}</td>
+		<td>{{ c.phone }}</td>
+		<td>{{ c.date_of_birth }}</td>
+		<td>{{ c.information }}</td>
+		<td>
+			<a href="/contacts/edit/{{ c.id }}">✏️ Редагувати</a> |
+			<a href="/contacts/delete/{{ c.id }}" onclick="return confirm('Видалити контакт {{ c.first_name }}?')">🗑 Видалити</a>
+		</td>
+	</tr>
+	{% endfor %}
+</table>
+{% endblock %}

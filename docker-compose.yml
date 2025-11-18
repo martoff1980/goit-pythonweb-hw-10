@@ -1,0 +1,48 @@
+# @format
+
+version: '3.8'
+services:
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: contacts_db_auth
+      POSTGRES_PASSWORD: 1234
+      POSTGRES_DB: contacts_db
+    ports:
+      - '5454:5432'
+    volumes:
+      - pgdata_auth:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7
+    ports:
+      - '6379:6379'
+
+  mailhog:
+    image: mailhog/mailhog
+    ports:
+      - '1025:1025'
+      - '8025:8025'
+
+  web:
+    build: .
+    ports:
+      - '8011:8011'
+    command: uvicorn main:app --host 0.0.0.0 --port 8011 --reload
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://contacts_db_auth:1234@db:5432/contacts_db
+      - REDIS_URL=redis://redis:6379/0
+      - SECRET_KEY=${SECRET_KEY}
+      - CLOUDINARY_CLOUD_NAME=${CLOUDINARY_CLOUD_NAME}
+      - CLOUDINARY_API_KEY=${CLOUDINARY_API_KEY}
+      - CLOUDINARY_API_SECRET=${CLOUDINARY_API_SECRET}
+      - SMTP_HOST=mailhog
+      - SMTP_PORT=1025
+      - CORS_ORIGINS=${CORS_ORIGINS}
+    depends_on:
+      - db
+      - redis
+      - mailhog
+
+volumes:
+  pgdata_auth:

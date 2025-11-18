@@ -1,0 +1,23 @@
+<!-- @format -->
+
+{% extends "base.html" %} {% block content %}
+<h2>Profile</h2>
+{% if user.avatar_url %}
+<img src="{{ user.avatar_url }}" class="avatar" alt="avatar" />
+{% endif %}
+<p><strong>Email:</strong> {{ user.email }}</p>
+<p><strong>Full name:</strong> {{ user.full_name }}</p>
+<p><strong>Verified:</strong> {{ 'Yes' if user.is_verified else 'No' }}</p>
+
+<h3>Upload avatar</h3>
+<form action="/users/avatar" method="post" enctype="multipart/form-data">
+	<input type="file" id="avatarFile" name="file" accept="image/*" required /><br /><br />
+	<button type="submit">Upload</button>
+</form>
+
+<div id="message"></div>
+
+<form action="/logout" method="post" style="margin-top: 10px">
+	<button type="submit">Logout</button>
+</form>
+{% endblock %}

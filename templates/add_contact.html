@@ -1,0 +1,26 @@
+<!-- @format -->
+
+{% extends "base.html" %} {% block content %}
+<h2>Додати контакт</h2>
+<form action="/contacts/add" method="post">
+	<label>Ім’я:</label>
+	<input type="text" name="first_name" required />
+
+	<label>Прізвище:</label>
+	<input type="text" name="last_name" required />
+
+	<label>Електронна адреса:</label>
+	<input type="email" name="email" required />
+
+	<label>Телефон:</label>
+	<input type="text" name="phone" required />
+
+	<label>День народження:</label>
+	<input type="date" name="birthday" required />
+
+	<label>Додаткова інформація:</label>
+	<textarea name="information"></textarea>
+
+	<button type="submit">Зберегти</button>
+</form>
+{% endblock %}

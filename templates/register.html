@@ -1,0 +1,15 @@
+<!-- @format -->
+
+{% extends "base.html" %} {% block content %}
+<h2>Register</h2>
+<form action="/register" method="post">
+	<label>Email</label><br /><input type="email" name="email" required /><br />
+	<label>Full name</label><br /><input type="text" name="full_name" /><br />
+	<label>Password</label><br /><input type="password" name="password" required /><br />
+	<button type="submit">Register</button>
+</form>
+{% if error %}
+<p style="color: red">{{ error }}</p>
+{% endif %} {% if request.query_params.get('success') %}
+<p style="color: green">Реєстрація успішна! Тепер увійдіть у свій акаунт.</p>
+{% endif %} {% endblock %}

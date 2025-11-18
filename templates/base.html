@@ -1,0 +1,58 @@
+<!-- @format -->
+
+<!DOCTYPE html>
+<html lang="uk">
+	<head>
+		<meta charset="UTF-8" />
+		<title>Контакти</title>
+		<style>
+			body {
+				font-family: sans-serif;
+				margin: 40px;
+			}
+			table {
+				border-collapse: collapse;
+				width: 100%;
+				margin-top: 20px;
+			}
+			th,
+			td {
+				border: 1px solid #ddd;
+				padding: 8px;
+				text-align: left;
+			}
+			a {
+				text-decoration: none;
+				color: #007bff;
+			}
+			a:hover {
+				text-decoration: underline;
+			}
+			nav a {
+				margin-left: 15px;
+			}
+			form {
+				margin-top: 20px;
+			}
+			input,
+			textarea {
+				width: 100%;
+				padding: 8px;
+				margin-bottom: 10px;
+			}
+			button {
+				padding: 10px 15px;
+			}
+		</style>
+	</head>
+	<body>
+		<nav>
+			<a href="/">Home</a>
+			<a href="/register">Register</a>
+			<a href="/login">Login</a>
+			<a href="/profile">Profile</a>
+		</nav>
+		<h1>Контактна книга</h1>
+		{% block content %}{% endblock %} {% block scripts %}{% endblock %}
+	</body>
+</html>

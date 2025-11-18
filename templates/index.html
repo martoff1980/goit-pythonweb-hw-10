@@ -1,0 +1,12 @@
+<!-- @format -->
+
+{% extends "base.html" %} {% block content %}
+<h1>Головна сторінка</h1>
+
+{% if user %}
+<p>👋 Вітаємо, {{ user }}!</p>
+<a href="/logout">Вийти</a>
+{% else %}
+<p>Ви не авторизовані.</p>
+<a href="/login">Увійти</a> | <a href="/register">Реєстрація</a>
+{% endif %} {% endblock %}

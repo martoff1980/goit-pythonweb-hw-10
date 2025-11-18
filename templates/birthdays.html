@@ -1,0 +1,30 @@
+<!-- @format -->
+
+{% extends "base.html" %} {% block content %}
+<h2>🎂 Дні народження на найближчі 7 днів</h2>
+<a href="/">⬅ Назад до списку</a>
+
+{% if contacts and contacts|length > 0 %}
+<table>
+	<tr>
+		<th>Ім’я</th>
+		<th>Прізвище</th>
+		<th>Email</th>
+		<th>Телефон</th>
+		<th>Дата народження</th>
+		<th>Додаткова інформація</th>
+	</tr>
+	{% for c in contacts %}
+	<tr>
+		<td>{{ c.first_name }}</td>
+		<td>{{ c.last_name }}</td>
+		<td>{{ c.email }}</td>
+		<td>{{ c.phone }}</td>
+		<td>{{ c.date_of_birth }}</td>
+		<td>{{ c.information }}</td>
+	</tr>
+	{% endfor %}
+</table>
+{% else %}
+<p>Немає днів народження найближчим часом 🎉</p>
+{% endif %} {% endblock %}
