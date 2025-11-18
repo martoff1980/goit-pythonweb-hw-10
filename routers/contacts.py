@@ -24,7 +24,7 @@ async def read_contacts(
     request: Request,
     q: str | None = Query(None, description="Пошук за іменем, прізвищем або email"),
     db: AsyncSession = Depends(get_db),
-    current_user: User = Depends(get_current_user)
+    current_user: User = Depends(get_current_user),
 ):
     # Отримуємо JWT з cookies
     token = request.cookies.get("access_token")
@@ -32,8 +32,8 @@ async def read_contacts(
     user_id = None
 
     # if not token:
-        # Якщо немає токена → редірект на логін
-        # return RedirectResponse(url="/login", status_code=303)
+    # Якщо немає токена → редірект на логін
+    # return RedirectResponse(url="/login", status_code=303)
 
     try:
         # Токен має формат "Bearer <jwt>", тому можливо застосувати token.split()[1]
@@ -163,4 +163,3 @@ async def birthdays_page(
 async def delete_contact(contact_id: int, db: AsyncSession = Depends(get_db)):
     await crud.delete_contact(db, contact_id)
     return RedirectResponse("/contacts", status_code=303)
-
