@@ -1,4 +1,13 @@
-from fastapi import FastAPI, Request, Form, Depends, Query, HTTPException
+from fastapi import (
+    FastAPI,
+    Request,
+    BackgroundTasks,
+    Form,
+    Depends,
+    Query,
+    status,
+    HTTPException,
+)
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import RedirectResponse, JSONResponse, HTMLResponse
@@ -17,7 +26,12 @@ from services.auth import (
     create_refresh_token,
     get_password_hash,
 )
-from services.email import get_user_by_email
+from services.email import (
+    get_user_by_email,
+    send_verification_email,
+    create_email_confirmation_token,
+    router as email_router,
+)
 from middleware.auth import AuthMiddleware
 from middleware.rate_limit import limiter
 import models, crud, schemas
@@ -45,6 +59,7 @@ app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 # Include routers
 app.include_router(contacts_router)
 app.include_router(user_router)
+app.include_router(email_router)
 
 
 # створити таблиці при старті (замість повноцінних міграцій)
@@ -79,13 +94,14 @@ async def register_form(request: Request):
     return templates.TemplateResponse("register.html", {"request": request})
 
 
-@app.post("/register")
+@app.post("/register", status_code=status.HTTP_201_CREATED)
 async def register_submit(
     request: Request,
     email: str = Form(...),
     full_name: str = Form(None),
     password: str = Form(...),
     db: AsyncSession = Depends(get_db),
+    background_tasks: BackgroundTasks = Depends(),
 ):
     try:
         # call auth.register logic - reuse crud and auth utils
@@ -104,13 +120,14 @@ async def register_submit(
         db.add(user)
         await db.commit()
         await db.refresh(user)
-        return RedirectResponse("/login?success=1", status_code=303)
 
-        # (Опціонально) можна створити токен верифікації
-        # token = secrets.token_urlsafe(32)
-        # await crud.set_verification_token(db, user, token)
-        # send email in background omitted for brevity
-        # return RedirectResponse("/login?success=1", status_code=303)
+        # Generate email confirmation token (JWT)
+        token = create_email_confirmation_token(user.email)
+
+        # Send email async in background
+        background_tasks.add_task(send_verification_email, user.email, token)
+
+        return RedirectResponse("/login?success=1", status_code=303)
 
     except Exception as e:
         await db.rollback()
@@ -159,16 +176,18 @@ async def login_submit(
         key="access_token",
         value=token,
         httponly=True,
+        secure=True,
         max_age=settings.ACCESS_TOKEN_EXPIRE_MINUTES * 60,
-        samesite="lax",
+        samesite="None",
     )
 
     resp.set_cookie(
         key="refresh_token",
         value=refresh_token,
         httponly=True,
+        secure=True,
         max_age=settings.ACCESS_TOKEN_EXPIRE_MINUTES * 60,
-        samesite="lax",
+        samesite="None",
     )
 
     return resp
@@ -209,7 +228,11 @@ async def login_token(
 
     response = JSONResponse({"access_token": token})
     response.set_cookie(
-        key="access_token", value=f"Bearer {token}", httponly=True, samesite="lax"
+        key="access_token",
+        value=f"Bearer {token}",
+        httponly=True,
+        secure=True,
+        samesite="None",
     )
     return response
 

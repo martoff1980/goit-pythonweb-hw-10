@@ -43,6 +43,7 @@ class UserBase(BaseModel):
 
 
 class UserCreate(UserBase):
+    email: EmailStr
     password: str = Field(..., min_length=6)
 
 

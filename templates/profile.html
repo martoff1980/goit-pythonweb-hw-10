@@ -8,6 +8,9 @@
 <p><strong>Email:</strong> {{ user.email }}</p>
 <p><strong>Full name:</strong> {{ user.full_name }}</p>
 <p><strong>Verified:</strong> {{ 'Yes' if user.is_verified else 'No' }}</p>
+{% if not user.is_verified %}
+<div class="alert">Email is not verified. Check your email.</div>
+{% endif %}
 
 <h3>Upload avatar</h3>
 <form action="/users/avatar" method="post" enctype="multipart/form-data">

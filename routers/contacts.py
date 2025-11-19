@@ -31,10 +31,6 @@ async def read_contacts(
     # user_email = None
     user_id = None
 
-    # if not token:
-    # Якщо немає токена → редірект на логін
-    # return RedirectResponse(url="/login", status_code=303)
-
     try:
         # Токен має формат "Bearer <jwt>", тому можливо застосувати token.split()[1]
         payload = jwt.decode(
@@ -70,13 +66,12 @@ async def read_contacts(
 
 
 @router.get("/add")
-# , current_user=Depends(get_dep_current_user)
 async def add_contact_form(request: Request):
     return templates.TemplateResponse("add_contact.html", {"request": request})
 
 
 # 📤 Обробка POST-запиту з форми
-@router.post("/add")
+@router.post("/add", status_code=status.HTTP_201_CREATED)
 async def create_contact(
     request: Request,
     first_name: str = Form(...),
