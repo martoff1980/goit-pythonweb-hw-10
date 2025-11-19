@@ -101,7 +101,7 @@ async def register_submit(
     full_name: str = Form(None),
     password: str = Form(...),
     db: AsyncSession = Depends(get_db),
-    background_tasks: BackgroundTasks = Depends(),
+    background_tasks: BackgroundTasks = BackgroundTasks(),
 ):
     try:
         # call auth.register logic - reuse crud and auth utils

@@ -21,9 +21,9 @@ class Settings(BaseSettings):
     )
 
     SMTP_HOST: str = Field(..., env="SMTP_HOST")
-    SMTP_PORT: int = Field(..., env="SMTP_PORT")
-    SMTP_USER: int = Field(..., env="SMTP_USER")
-    SMTP_PASS: int = Field(..., env="SMTP_PASS")
+    SMTP_PORT: str = Field(..., env="SMTP_PORT")
+    SMTP_USER: str = Field(..., env="SMTP_USER")
+    SMTP_PASS: str = Field(..., env="SMTP_PASS")
     SECRET_EMAIL: str = Field(..., env="SECRET_EMAIL")
 
     CLOUDINARY_CLOUD_NAME: str = Field(..., env="CLOUDINARY_CLOUD_NAME")
